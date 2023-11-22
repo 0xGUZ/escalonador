@@ -1,7 +1,5 @@
 #include "pcb.h"
 #include <stdlib.h>
-#include <time.h>
-
 
 // Função para criar um novo PCB
 PCB createPCB(int pid, int priority, int cpu_time, int io_time) {
@@ -20,7 +18,6 @@ PCB createPCB(int pid, int priority, int cpu_time, int io_time) {
 
 PCB createRandomPCB() {
     static int pid = 1; // PID inicial e incrementa para cada PCB criado
-    srand(time(NULL) + pid); // Inicializa a semente do gerador de números aleatórios
 
     int priority = (rand() % 5) + 1; // Prioridade entre 1 e 5
     int cpu_time = (rand() % 91) + 10; // Tempo de CPU entre 10 e 100
