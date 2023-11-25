@@ -16,12 +16,19 @@ typedef struct {
     int count;           // Contador para o número de elementos na fila
 } Queue;
 
-// Declarações de funções para manipulação da fila
-void initializeQueue(Queue* q);
-void enqueue(Queue* q, PCB process);
-PCB dequeue(Queue* q);
-int isQueueEmpty(Queue* q);
-void printQueue(Queue* q);
-void dequeueAll(Queue* q);
+// Funções para manipulação da fila
+Queue* createQueue();
+void initializeQueue(Queue* queue);
+void initializeQueues(Queue** queues, int numberOfQueues);
+void enqueue(Queue* queue, PCB process);
+PCB dequeue(Queue* queue);
+int isQueueEmpty(Queue* queue);
+int areQueuesEmpty(Queue** queues, int numberOfQueues);
+void printQueue(Queue* queue);
+void dequeueAll(Queue* queue);
+Queue* queueFromFile(const char* filepath);
+void loadInitialProcesses(Queue* highPriorityQueue, const char* filepath);
+void freeQueue(Queue* queue);
+void freeQueues(Queue** queues, int numberOfQueues);
 
 #endif // QUEUE_H
