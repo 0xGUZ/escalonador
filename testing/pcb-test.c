@@ -31,7 +31,7 @@ int main() {
     }
 
     // Libera a memória alocada para a fila
-    free(pcbQueue);
+    freeQueue(pcbQueue);
 
     return 0;
 }
