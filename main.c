@@ -3,47 +3,41 @@
 #include "../headers/queue.c"
 #include "../headers/pcb.c"
 
+#define FILEPATH "../input.txt"
+
+typedef enum {
+    IO_DISCO,
+    IO_FITA_MAGNETICA,
+    IO_IMPRESSORA
+} IOType;
+
+// CONSTANTE
+const int MAX_PROCESSOS = 10;
+const int QUANTUM = 20;
+const int DURACAO_IO_DISCO = 30; 
+const int DURACAO_IO_FITA = 40;  
+const int DURACAO_IO_IMPRESSORA = 50; 
+
 int main() {
-    // VARIAVEIS
-    int stop = 0;
+    // Cria as filas
+    Queue* highPriorityQueue = createQueue();
+    Queue* lowPriorityQueue = createQueue();
+    Queue* discoQueue = createQueue();
+    Queue* fitaQueue = createQueue();
+    Queue* impressoraQueue = createQueue();
 
-    //seed random setada
-    srand(time(NULL));
+    // Array de filas pra uso posterior
+    Queue* allQueues[] = {highPriorityQueue, lowPriorityQueue, discoQueue, fitaQueue, impressoraQueue};
+    int numberOfQueues = sizeof(allQueues) / sizeof(allQueues[0]);
 
-    // FILAS
-    Queue highPriorityQueue;
-    Queue mediumPriorityQueue;
-    Queue lowPriorityQueue;
-    Queue ioQueue;
+    // Inicializa todas as filas
+    initializeQueues(allQueues, numberOfQueues);
 
-    // Inicializa as filas
-    initializeQueue(&highPriorityQueue);
-    initializeQueue(&mediumPriorityQueue);
-    initializeQueue(&lowPriorityQueue);
-    initializeQueue(&ioQueue);
+    // Carrega os processos iniciais na fila de alta prioridade
+    loadInitialProcesses(highPriorityQueue, FILEPATH);
 
-    // -X-X-X-X-X- ESCALONADOR -X-X-X-X-X-
-    while (stop == 0) {
-        PCB currentProcess;
+    // Escalonador roda enquanto tem coisa nas filas
+    while (!areQueuesEmpty(allQueues, numberOfQueues)) {
 
-        // Selecionar processo da fila de alta prioridade, depois média, depois baixa
-        if (!isQueueEmpty(&highPriorityQueue)) {
-            currentProcess = dequeue(&highPriorityQueue);
-        } 
-        
-        else if (!isQueueEmpty(&mediumPriorityQueue)) {
-            currentProcess = dequeue(&mediumPriorityQueue);
-        } 
-        
-        else if (!isQueueEmpty(&lowPriorityQueue)) {
-            currentProcess = dequeue(&lowPriorityQueue);
-        }
-
-        if (currentProcess.pid != -1) {
-            // Simular execução do processo
-            // Decidir o que fazer com o processo após a execução (terminou, I/O, etc.)
-        }
-
-        // Tratar processos de I/O
     }
 }
