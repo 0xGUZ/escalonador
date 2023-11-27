@@ -10,9 +10,11 @@ typedef struct {
     int cpu_time;           // Tempo total de CPU usado
     int io_time;            // Tempo total gasto em operações de I/O
     int io_type;            // Tipo de operação de I/O (disco, fita ou impressora)
+    int time_until_io;
 } PCB;
 
-PCB createPCB(int pid, int priority, int cpu_time, int io_time);
+PCB createPCB(int pid, int priority, int cpu_time, int io_time, int io_type, int time_until_io);
 PCB createRandomPCB();
+void createRandomTable(int id, int numProcesses);
 
-#endif // PCB_H
+#endif
