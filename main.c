@@ -111,7 +111,7 @@ void processIO(Queue* ioQueue, Queue* targetQueue) {
         process.io_time -= QUANTUM; 
 
         if (process.io_time <= 0) {
-            dequeue(ioQueue, process); // Tira o processo do IO
+            dequeue(ioQueue); // Tira o processo do IO
             enqueue(targetQueue, process); // Processo completou IO, mova para a fila de destino
         } 
     }
