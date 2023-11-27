@@ -10,7 +10,7 @@ Queue* createQueue() {
     Queue* ptr = (Queue*)malloc(sizeof(Queue));
     if(ptr == NULL){
         perror("Erro ao alocar memória em createQueue()");
-        return 1;
+        return NULL;
     }
     return ptr;
 }
@@ -81,7 +81,7 @@ void printQueue(Queue* q) {
     Node* temp = q->front;
     printf("Fila: ");
     while (temp != NULL) {
-        printf("\n[PID: %d, Prioridade: %d, Tempo CPU: %d, Tempo IO: %d] -> ", temp->data.pid, temp->data.priority, temp->data.cpu_time, temp->data.io_time);
+        printf("\n[PID: %d, Prioridade: %d, Tempo CPU: %d, Tempo IO: %d, Tipo: %d, Tempo até IO: %d] -> ", temp->data.pid, temp->data.priority, temp->data.cpu_time, temp->data.io_time, temp->data.io_type, temp->data.time_until_io);
         temp = temp->next;
     }
     printf("NULL\n");
@@ -105,14 +105,14 @@ Queue* queueFromFile(const char* filepath) {
     Queue* queue = createQueue();
     initializeQueue(queue);
 
-    int pid, cpu_time, io_time, io_type;
+    int pid, cpu_time, io_time, io_type, time_until_io;
 
     // Ignora a primeira linha (são labels)
-    fscanf(file, "%*s %*s %*s %*s");
+    fscanf(file, "%*s %*s %*s %*s %*s");
 
     // Lê cada linha do arquivo e adiciona à fila
-    while (fscanf(file, "%d %d %d %d", &pid, &cpu_time, &io_time, &io_type) == 3) {
-        PCB pcb = createPCB(pid, INITIAL_PRIORITY, cpu_time, io_time, io_type);
+    while (fscanf(file, "%d %d %d %d", &pid, &cpu_time, &io_time, &io_type, &time_until_io) == 3) {
+        PCB pcb = createPCB(pid, INITIAL_PRIORITY, cpu_time, io_time, io_type, time_until_io);
         enqueue(queue, pcb);
     }
 
