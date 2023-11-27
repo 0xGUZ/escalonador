@@ -13,7 +13,7 @@ int main() {
 
     // Cria e enfileira alguns PCBs com valores definidos
     for (int i = 0; i < 3; i++) {
-        PCB definedPCB = createPCB(i, i+1, 50, 30); // Criando PCBs com valores definidos
+        PCB definedPCB = createPCB(i, i+1, 50, 30, 0, 10); // Criando PCBs com valores definidos
         enqueue(pcbQueue, definedPCB);
     }
 
