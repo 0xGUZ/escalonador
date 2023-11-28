@@ -1,0 +1,10 @@
+gcc -o scheduler ./src/input_records.c ./src/io_type.c ./src/process_queue.c ./src/process.c ./src/scheduler.c ./src/view.c ./src/main.c -ansi -pedantic -Wall -O3 -I./include
+
+-- INPUT PEQUENO - 15 ticks -- 
+scheduler test-input-records/input-s
+
+-- INPUT MEDIO - 50 ticks --
+scheduler test-input-records/input-m
+
+-- INPUT GRANDE - 150 ticks --
+scheduler test-input-records/input-l

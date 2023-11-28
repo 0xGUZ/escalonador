@@ -28,9 +28,9 @@ unsigned io_type_chance_to_occur(IO_TYPE io_type)
 {
     switch(io_type)
     {
-        case DISK:              return 20;
-        case MAGNETIC_TAPE:     return 10;
-        case PRINTER:           return 5;
+        case DISK:              return 10;
+        case MAGNETIC_TAPE:     return 5;
+        case PRINTER:           return 3;
     }
     return 0;
 }
