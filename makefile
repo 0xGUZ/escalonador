@@ -1,0 +1,27 @@
+EXECUTABLE=./scheduler
+
+SOURCES_FOLDER=./src
+HEADERS_FOLDER=./include
+OBJECTS_FOLDER=./obj
+
+COMPILER=gcc
+COMPILER_FLAGS=-ansi -pedantic -Wall -O3
+
+SOURCES=${wildcard ${SOURCES_FOLDER}/*.c}
+HEADERS=${wildcard ${HEADERS_FOLDER}/*.h}
+
+OBJECTS=${subst .c,.o,${subst ${SOURCES_FOLDER},${OBJECTS_FOLDER},$(SOURCES)}}
+
+all: ${OBJECTS_FOLDER} ${EXECUTABLE}
+
+${OBJECTS_FOLDER}:
+	mkdir ${OBJECTS_FOLDER}
+
+${EXECUTABLE}: ${OBJECTS}
+	$(COMPILER) -o $@ $^ $(COMPILER_FLAGS)
+
+${OBJECTS_FOLDER}/%.o: ${SOURCES_FOLDER}/%.c ${wildcard ${SOURCES_FOLDER}/*.h}
+	$(COMPILER) -o $@ $< $(COMPILER_FLAGS) -c -I${HEADERS_FOLDER}
+
+clean:
+	rm -rf ${EXECUTABLE} ${OBJECTS_FOLDER}
