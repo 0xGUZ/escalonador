@@ -44,6 +44,8 @@ void input_records_read_next(INPUT_RECORD* out_input_record)
         fprintf(stderr, "Error: Could not read record from input file.\n");
         exit(3);
     }
+
+    current_input_record = *out_input_record;
     has_current_input_record = 1;
 }
 
