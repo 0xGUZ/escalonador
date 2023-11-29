@@ -24,6 +24,7 @@ int scheduler_is_at_start_of_quantum(void);
 void scheduler_iterate_before_time(void);
 void scheduler_iterate_after_time(void);
 
+void scheduler_iterate_waiting_processes(void);
 void scheduler_iterate_running_process(void);
 void scheduler_put_running_process_to_wait(void);
 void scheduler_terminate_running_process(void);
@@ -31,7 +32,7 @@ void scheduler_iterate_time(void);
 void scheduler_read_input_records(void);
 
 void scheduler_admit_new_processes(void);
-void scheduler_iterate_waiting_processes(void);
+void scheduler_make_waiting_processes_ready(void);
 void scheduler_make_running_process_ready(void);
 
 PROCESS_QUEUE* scheduler_waiting_queue_for_io_type(IO_TYPE io_type);
@@ -117,6 +118,7 @@ void scheduler_iterate_before_time(void)
 {
     scheduler_read_input_records();
     scheduler_admit_new_processes();
+    scheduler_make_waiting_processes_ready();
     scheduler_make_running_process_ready(); 
     scheduler_put_next_ready_process_to_run();
 }
@@ -126,6 +128,17 @@ void scheduler_iterate_after_time(void)
     scheduler_iterate_waiting_processes();
     scheduler_iterate_running_process();
     scheduler_iterate_time();
+}
+
+void scheduler_iterate_waiting_processes(void)
+{
+    unsigned i;
+    for(i = 0; i < IO_TYPE_NUMBER_OF_TYPES; i++)
+    {
+        PROCESS_QUEUE* waiting_queue = scheduler_waiting_queue_for_io_type(IO_TYPE_TYPES[i]);
+        if(process_queue_is_empty(waiting_queue)) continue;
+        waiting_queue->front->process->time_in_waiting++;
+    }
 }
 
 void scheduler_iterate_running_process(void)
@@ -208,20 +221,18 @@ void scheduler_admit_new_processes(void)
     }
 }
 
-void scheduler_iterate_waiting_processes(void)
+void scheduler_make_waiting_processes_ready(void)
 {
     unsigned i;
     for(i = 0; i < IO_TYPE_NUMBER_OF_TYPES; i++)
     {
         PROCESS_QUEUE* waiting_queue = scheduler_waiting_queue_for_io_type(IO_TYPE_TYPES[i]);
         PROCESS* process;
-        unsigned new_process_priority;
         if(process_queue_is_empty(waiting_queue)) continue;
         process = waiting_queue->front->process;
-        process->time_in_waiting++;
         if(process->time_in_waiting == io_type_duration(process->io_type_waiting_for))
         {
-            new_process_priority = io_type_priority_for_process_after_io_completion(process->io_type_waiting_for);
+            unsigned new_process_priority = io_type_priority_for_process_after_io_completion(process->io_type_waiting_for);
             process_queue_enqueue(scheduler_ready_queues[new_process_priority], process);
             process->state = READY;
             process->priority = new_process_priority;
