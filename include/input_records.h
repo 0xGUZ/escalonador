@@ -15,7 +15,7 @@ int input_records_are_finished(void);
 
 void input_records_read_next(INPUT_RECORD* out_input_record);
 
-void input_records_discard_next(void);
+void input_records_advance(void);
 
 void input_records_close(void);
 

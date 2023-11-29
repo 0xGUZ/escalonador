@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-INPUT_RECORD current_input_record;
-int has_current_input_record;
+INPUT_RECORD input_records_next_record;
+int input_records_has_next_record;
 
 FILE* input_records_input_stream;
 
@@ -17,7 +17,7 @@ void input_records_initialize(char* file_path)
         fprintf(stderr, "Error: Input file could not be opened.\n");
         exit(2);
     }
-    has_current_input_record = 0;
+    input_records_has_next_record = 0;
 }
 
 int input_records_are_finished(void)
@@ -32,26 +32,23 @@ int input_records_are_finished(void)
 void input_records_read_next(INPUT_RECORD* out_input_record)
 {
     int could_read_count;
-    if(has_current_input_record)
+    if(!input_records_has_next_record)
     {
-        *out_input_record = current_input_record;
-        return;
+        could_read_count = fscanf(input_records_input_stream, " %u %u %u",
+            &input_records_next_record.pid, &input_records_next_record.starting_time, &input_records_next_record.run_time);
+        if(could_read_count < 2)
+        {
+            fprintf(stderr, "Error: Could not read record from input file.\n");
+            exit(3);
+        }
     }
-    could_read_count = fscanf(input_records_input_stream, " %u %u %u",
-            &out_input_record->pid, &out_input_record->starting_time, &out_input_record->run_time);
-    if(could_read_count < 2)
-    {
-        fprintf(stderr, "Error: Could not read record from input file.\n");
-        exit(3);
-    }
-
-    current_input_record = *out_input_record;
-    has_current_input_record = 1;
+    *out_input_record = input_records_next_record;
+    input_records_has_next_record = 1;
 }
 
-void input_records_discard_next(void)
+void input_records_advance(void)
 {
-    has_current_input_record = 0;
+    input_records_has_next_record = 0;
 }
 
 void input_records_close(void)

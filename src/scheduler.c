@@ -190,7 +190,7 @@ void scheduler_read_input_records(void)
         process = new_process(next_process_record.pid, next_process_record.run_time);
         process_queue_enqueue(scheduler_all_processes, process);
         process_queue_enqueue(scheduler_new_queue, process);
-        input_records_discard_next();
+        input_records_advance();
         input_records_read_next(&next_process_record);
     }
 }
