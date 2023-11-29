@@ -196,15 +196,14 @@ void scheduler_read_input_records(void)
 {
     PROCESS* process;
     INPUT_RECORD next_process_record;
-    if(input_records_are_finished()) return;
-    input_records_read_next(&next_process_record);
-    while(!input_records_are_finished() && next_process_record.starting_time == scheduler_time)
+    while(!input_records_are_finished())
     {
+        input_records_read_next(&next_process_record);
+        if(next_process_record.starting_time != scheduler_time) break;
+        input_records_advance();
         process = new_process(next_process_record.pid, next_process_record.run_time);
         process_queue_enqueue(scheduler_all_processes, process);
         process_queue_enqueue(scheduler_new_queue, process);
-        input_records_advance();
-        input_records_read_next(&next_process_record);
     }
 }
 

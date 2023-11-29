@@ -23,8 +23,13 @@ void input_records_initialize(char* file_path)
 int input_records_are_finished(void)
 {
     int character;
-    while(isspace((char) (character = fgetc(input_records_input_stream))));
-    if(character == EOF) return 1;
+    if(input_records_has_next_record) return 0;
+    character = fgetc(input_records_input_stream);
+    while(isspace((char) character))
+    {
+        character = fgetc(input_records_input_stream);
+    }
+    if(feof(input_records_input_stream)) return 1;
     ungetc(character, input_records_input_stream);
     return 0;
 }
@@ -36,7 +41,7 @@ void input_records_read_next(INPUT_RECORD* out_input_record)
     {
         could_read_count = fscanf(input_records_input_stream, " %u %u %u",
             &input_records_next_record.pid, &input_records_next_record.starting_time, &input_records_next_record.run_time);
-        if(could_read_count < 2)
+        if(could_read_count < 3)
         {
             fprintf(stderr, "Error: Could not read record from input file.\n");
             exit(3);
